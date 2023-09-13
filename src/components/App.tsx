@@ -1,19 +1,17 @@
 import { useState } from "react";
 import useImageDedupe from "../hooks/useImageDedupe";
-import Duplicates from "./Duplicates";
-import Status from "./Status";
+import Images from "./Images";
 import Upload from "./Upload";
 
 function App() {
-  const [toleranceThreshold, setTolerance] = useState(85);
-  const { duplicateImages, isProcessing, isUploading, start, upload } =
-    useImageDedupe(toleranceThreshold);
+  const [toleranceThreshold, setTolerance] = useState(15);
+  const { duplicates, isLoading, upload } = useImageDedupe(toleranceThreshold);
 
   return (
     <>
       <h1>Image de-dupe</h1>
 
-      <Status isProcessing={isProcessing} isUploading={isUploading} />
+      {isLoading && <p>Loading...</p>}
 
       <Upload
         setTolerance={setTolerance}
@@ -21,9 +19,7 @@ function App() {
         upload={upload}
       />
 
-      <button onClick={start}>Start</button>
-
-      <Duplicates duplicateImages={duplicateImages} />
+      <Images images={duplicates} />
     </>
   );
 }

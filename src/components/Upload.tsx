@@ -30,14 +30,8 @@ const Upload = memo(function Upload({
       </label>
 
       <p>
-        The percentage of allowed difference between the colors of two images.
-        (Personally, I think 85 works best)
-      </p>
-      <p>
-        <i>
-          warning: the higher the tolerance, the longer it will take to display
-          (rendering the images is slow ig)
-        </i>
+        Tolerance threshold is the percentage of allowed difference between the
+        colors of two images. (Personally, I think 15 works best)
       </p>
     </div>
   );

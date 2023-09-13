@@ -5,39 +5,47 @@ import Pagination from "./Pagination";
 
 const pageSize = 300;
 
-interface DuplicatesProps {
-  duplicateImages: ImagePair[];
+interface ImagesProps {
+  images: ImagePair[];
 }
 
-const Duplicates = memo(function Duplicates({
-  duplicateImages,
-}: DuplicatesProps) {
+const Images = memo(function Images({ images: images }: ImagesProps) {
   // Due to the exponential size of the array, we only want to display a few
   // Maximum of 1000 images (500 pairs)
   const [page, setPage] = useState(0);
 
   // Get the images to display
-  const images = useMemo(
-    () => duplicateImages.slice(page * pageSize, (page + 1) * pageSize),
+  const pageImages = useMemo(
+    () => images.slice(page * pageSize, (page + 1) * pageSize),
 
     // Becuase this could potentially be an expensive operation, we only want to do it when the page changes
-    [duplicateImages, page]
+    [images, page]
   );
 
   // Return if there are no duplicate images
-  if (duplicateImages.length === 0) return null;
+  if (images.length === 0) return null;
 
-  const maxPage = Math.ceil(duplicateImages.length / pageSize);
+  const maxPage = Math.ceil(images.length / pageSize);
 
   return (
-    <div className="card">
+    <div
+      className="card"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <h2>Duplicate Images</h2>
 
       <Pagination page={page} setPage={setPage} maxPage={maxPage} />
 
-      {images.map(({ first, second, similarity }, i) => (
-        <div key={i} style={{ paddingBottom: "5rem" }}>
-          <div style={{ display: "flex", flexDirection: "row" }}>
+      {pageImages.map(({ first, second, similarity }, i) => (
+        <div
+          key={i}
+          style={{ paddingBottom: "5rem", width: "fit-content", gap: "2rem" }}
+        >
+          <div style={{ display: "flex", flexDirection: "row", gap: "2rem" }}>
             <Image file={first.file} />
 
             <Image file={second.file} />
@@ -52,4 +60,4 @@ const Duplicates = memo(function Duplicates({
   );
 });
 
-export default Duplicates;
+export default Images;
