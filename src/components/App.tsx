@@ -17,6 +17,7 @@ function App() {
         setTolerance={setTolerance}
         toleranceThreshold={toleranceThreshold}
         upload={upload}
+        isLoading={isLoading}
       />
 
       <Images images={duplicates} />

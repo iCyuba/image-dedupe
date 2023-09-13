@@ -23,7 +23,7 @@ const Images = memo(function Images({ images: images }: ImagesProps) {
   );
 
   // Return if there are no duplicate images
-  if (images.length === 0) return null;
+  if (images.length === 0) return <h3>No duplicate images found</h3>;
 
   const maxPage = Math.ceil(images.length / pageSize);
 
