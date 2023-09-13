@@ -20,7 +20,6 @@ interface RawImage {
 
 interface Image {
   file: File;
-  dataUrl: string;
   histogram: Histogram;
 }
 
