@@ -3,20 +3,20 @@ import { memo } from "react";
 interface UploadProps {
   setTolerance: (tolerance: number) => void;
   toleranceThreshold: number;
-  upload: (ev: React.ChangeEvent<HTMLInputElement>) => void;
+  load: (files: FileList | null) => void;
   isLoading: boolean;
 }
 
 const Upload = memo(function Upload({
   setTolerance,
   toleranceThreshold,
-  upload,
+  load,
   isLoading,
 }: UploadProps) {
   return (
     <div className="card">
       <input
-        onChange={upload}
+        onChange={(ev) => load(ev.target.files)}
         type="file"
         multiple
         accept="image/png, image/jpeg"

@@ -1,5 +1,5 @@
-# Show duplicate images
+# Random image utilities
 
 - School project...
 
-Live deployment: https://dedupe.icy.cx/
+Live deployment: https://img.icy.cx/

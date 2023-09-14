@@ -1,14 +1,16 @@
+type Canvas = HTMLCanvasElement | OffscreenCanvas;
+
 /**
  * Get image data from a bitmap
  *
  * Closes the bitmap after getting the image data
  * @param bitmap Bitmap to get the image data from
- * @param canvas Canvas element to draw the image onto (if not provided, a new canvas will be created)
+ * @param canvas Canvas to use for drawing the image (if not provided, an offscreen canvas will be created)
  * @returns Image data
  */
 function imageDataFromBitmap(
   bitmap: ImageBitmap,
-  canvas = document.createElement("canvas")
+  canvas: Canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
 ): ImageData {
   // Get the width and height of the image
   const { width, height } = bitmap;

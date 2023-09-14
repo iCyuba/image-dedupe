@@ -1,4 +1,4 @@
-import { Histogram } from "./histogram";
+import { Histogram } from ".";
 
 /**
  * Compares two histograms and returns the percentage of similarity
@@ -11,19 +11,19 @@ function compareHistograms(first: Histogram, second: Histogram): number {
   const totalDiff =
     first.reds.reduce(
       (acc, value, i) => acc + Math.abs(value - second.reds[i]),
-      0,
+      0
     ) +
     first.greens.reduce(
       (acc, value, i) => acc + Math.abs(value - second.greens[i]),
-      0,
+      0
     ) +
     first.blues.reduce(
       (acc, value, i) => acc + Math.abs(value - second.blues[i]),
-      0,
+      0
     ) +
     first.alphas.reduce(
       (acc, value, i) => acc + Math.abs(value - second.alphas[i]),
-      0,
+      0
     );
 
   // Return the percentage of similarity

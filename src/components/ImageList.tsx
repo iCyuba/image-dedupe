@@ -5,11 +5,11 @@ import Pagination from "./Pagination";
 
 const pageSize = 300;
 
-interface ImagesProps {
+interface ImageListProps {
   images: ImagePair[];
 }
 
-const Images = memo(function Images({ images: images }: ImagesProps) {
+const ImageList = memo(function ImageList({ images: images }: ImageListProps) {
   // Due to the exponential size of the array, we only want to display a few
   // Maximum of 1000 images (500 pairs)
   const [page, setPage] = useState(0);
@@ -23,7 +23,7 @@ const Images = memo(function Images({ images: images }: ImagesProps) {
   );
 
   // Return if there are no duplicate images
-  if (images.length === 0) return <h3>No duplicate images found</h3>;
+  if (images.length === 0) return <h3>No images found</h3>;
 
   const maxPage = Math.ceil(images.length / pageSize);
 
@@ -36,7 +36,7 @@ const Images = memo(function Images({ images: images }: ImagesProps) {
         alignItems: "center",
       }}
     >
-      <h2>Duplicate Images</h2>
+      <h3>Duplicate Images ({images.length} items)</h3>
 
       <Pagination page={page} setPage={setPage} maxPage={maxPage} />
 
@@ -60,4 +60,4 @@ const Images = memo(function Images({ images: images }: ImagesProps) {
   );
 });
 
-export default Images;
+export default ImageList;

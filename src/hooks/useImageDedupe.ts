@@ -1,7 +1,7 @@
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import compareHistograms from "../lib/compareHistograms";
 import histogramFromImageData, { Histogram } from "../lib/histogram";
+import compareHistograms from "../lib/histogram/compare";
 import imageDataFromBitmap from "../lib/imageDataFromBitmap";
 
 interface Image {
@@ -23,34 +23,27 @@ function useImageDedupe(toleranceThreshold: number = 85) {
   const duplicates = useMemo(
     () =>
       images.filter(({ similarity }) => similarity >= 100 - toleranceThreshold),
+
     [images, toleranceThreshold]
   );
 
-  /**
-   * Event handler for uploading images
-   * @param ev Change event from the input element
-   */
-  const upload = useCallback(async (ev: ChangeEvent<HTMLInputElement>) => {
+  const load = useCallback(async (files: FileList | null) => {
+    // Return if there are no files
+    if (!files || files.length === 0) return;
+
     // Set loading to true
     setLoading(true);
 
-    // Load all the files and return if there are no files
-    const files = ev.target.files;
-    if (!files || files.length === 0) return;
-
     // Map the files to bitmaps
     const bitmaps = await Promise.all(
-      Array.from(files).map(async (file) => {
-        // Bitmap from image
-        const bitmap = await createImageBitmap(file);
-
-        // Return the file and bitmap
-        return { file, bitmap };
-      })
+      Array.from(files).map(async (file) => ({
+        bitmap: await createImageBitmap(file),
+        file,
+      }))
     );
 
-    // Create a canvas element to draw the images on
-    const canvas = document.createElement("canvas");
+    // Create an offscreen canvas to draw the images on
+    const canvas = new OffscreenCanvas(1, 1); // The size doesn't matter, it gets changed by the function...
 
     // Map the bitmaps to histograms
     const images: Image[] = bitmaps.map(({ file, bitmap }) => ({
@@ -82,7 +75,7 @@ function useImageDedupe(toleranceThreshold: number = 85) {
     setLoading(false);
   }, []);
 
-  return { duplicates, images, isLoading, upload };
+  return { duplicates, images, isLoading, load };
 }
 
 export default useImageDedupe;
