@@ -1,5 +1,3 @@
-type Canvas = HTMLCanvasElement | OffscreenCanvas;
-
 /**
  * Get image data from a bitmap
  *
@@ -10,7 +8,7 @@ type Canvas = HTMLCanvasElement | OffscreenCanvas;
  */
 function imageDataFromBitmap(
   bitmap: ImageBitmap,
-  canvas: Canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
+  canvas: HTMLCanvasElement | OffscreenCanvas = new OffscreenCanvas(1, 1)
 ): ImageData {
   // Get the width and height of the image
   const { width, height } = bitmap;
@@ -20,7 +18,10 @@ function imageDataFromBitmap(
   canvas.height = height;
 
   // Draw the image onto the canvas
-  const ctx = canvas.getContext("2d")!;
+  // Note: Typescript is broken and thinks the type can be RenderingContext (which it can't...) so a type assertion is needed
+  const ctx = canvas.getContext("2d") as CanvasRenderingContext2D | null;
+  if (!ctx) throw new Error("Could not get canvas context");
+
   ctx.drawImage(bitmap, 0, 0, width, height);
 
   // Close the bitmap
