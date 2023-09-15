@@ -1,22 +1,30 @@
-import { useEffect, useRef } from "react";
+import { MouseEvent, useCallback, useRef } from "react";
 import useEditedImage from "../hooks/useEditedImage";
 
 function Editor() {
   const canvas = useRef<HTMLCanvasElement>(null);
 
-  const { editedImage, isLoading, load } = useEditedImage();
+  const { addFlare, image, isLoading, load, moveFlare } =
+    useEditedImage(canvas);
 
-  // Update the canvas when the edited image changes
-  useEffect(() => {
-    if (canvas.current && editedImage) {
-      const ctx = canvas.current.getContext("2d")!;
+  // Get the position of the mouse on the canvas relative to the image size
+  const getFlarePosition = useCallback(
+    (ev: MouseEvent<HTMLCanvasElement>) => {
+      if (!image) return null;
 
-      ctx.canvas.width = editedImage.width;
-      ctx.canvas.height = editedImage.height;
+      const target = ev.target as HTMLCanvasElement;
+      const x = Math.round(
+        (ev.nativeEvent.offsetX / target.clientWidth) * image.width
+      );
+      const y = Math.round(
+        (ev.nativeEvent.offsetY / target.clientHeight) * image.height
+      );
 
-      ctx.putImageData(editedImage, 0, 0);
-    }
-  }, [editedImage]);
+      return { x, y };
+    },
+
+    [image]
+  );
 
   return (
     <>
@@ -29,7 +37,17 @@ function Editor() {
         disabled={isLoading}
       />
 
-      <canvas style={{ width: "100%" }} ref={canvas} />
+      <canvas
+        style={{ width: "100%" }}
+        ref={canvas}
+        onMouseMove={(ev) => moveFlare(getFlarePosition(ev))}
+        onMouseLeave={() => moveFlare(null)}
+        onClick={(ev) => {
+          const flare = getFlarePosition(ev);
+
+          if (flare) addFlare(flare);
+        }}
+      />
     </>
   );
 }

@@ -1,5 +1,5 @@
-import betterImageData, { type Pixel } from "./betterImageData";
-import invert2dArray from "./invert2dArray";
+import betterImageData, { type Pixel } from "../betterImageData";
+import invert2dArray from "../invert2dArray";
 
 /**
  * Crop an image, will remove dark pixels around the border
@@ -14,15 +14,15 @@ function crop(imageData: ImageData): ImageData {
   const data = betterImageData(imageData);
   const inverseData = invert2dArray(data);
 
-  // GC is gonna love this one... so many new arrays
+  // Find the indexes where the image starts and ends (on each side)
   const hasContent = (pixel: Pixel) =>
     pixel.red > 64 || pixel.green > 64 || pixel.blue > 64;
   const top = data.findIndex((row) => row.some(hasContent));
   const bottom =
-    height - data.toReversed().findIndex((row) => row.some(hasContent));
+    height - data.reverse().findIndex((row) => row.some(hasContent));
   const left = inverseData.findIndex((row) => row.some(hasContent));
   const right =
-    width - inverseData.toReversed().findIndex((row) => row.some(hasContent));
+    width - inverseData.reverse().findIndex((row) => row.some(hasContent));
 
   // Make a temporary canvas to draw the image on
   const canvas = new OffscreenCanvas(imageData.width, imageData.height);
@@ -38,8 +38,6 @@ function crop(imageData: ImageData): ImageData {
     right - left,
     bottom - top
   );
-
-  console.log("top", top, "left", left, "bottom", bottom, "right", right);
 
   return croppedImageData;
 }
